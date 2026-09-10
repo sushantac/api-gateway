@@ -1,0 +1,9 @@
+app:
+  rate-limit:
+    default-limit: ${RATE_LIMIT_DEFAULT_LIMIT:1000}
+    auth-limit: ${AUTH_RATE_LIMIT:50}
+
+logging:
+  level:
+    com.ecommerce.apigateway: DEBUG
+    reactor.netty: WARN

@@ -1,0 +1,79 @@
+spring:
+  application:
+    name: api-gateway
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: http://auth-service:8081
+          predicates:
+            - Path=/api/v1/auth/**
+        - id: cart-service
+          uri: http://cart-service:8082
+          predicates:
+            - Path=/api/v1/cart/**
+        - id: product-service
+          uri: http://product-service:8083
+          predicates:
+            - Path=/api/v1/products/**,/api/v1/categories/**
+        - id: order-api
+          uri: http://order-api:8084
+          predicates:
+            - Path=/api/v1/orders/**,/api/v1/customers/**
+        - id: admin-service
+          uri: http://admin-service:8085
+          predicates:
+            - Path=/api/v1/admin/**
+
+server:
+  port: 8080
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus, gateway
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+    allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+    allowed-headers: "*"
+    allow-credentials: true
+    max-age: 3600
+  rate-limit:
+    enabled: ${RATE_LIMIT_ENABLED:true}
+    default-limit: ${RATE_LIMIT_DEFAULT_LIMIT:100}
+    minutes: ${RATE_LIMIT_MINUTES:1}
+    auth-limit: ${AUTH_RATE_LIMIT:10}
+    auth-paths:
+      - /api/v1/auth/login
+      - /api/v1/auth/register
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: Spring Cloud Gateway for the e-commerce platform
+
+logging:
+  level:
+    com.ecommerce.apigateway: INFO
+    reactor.netty: WARN
