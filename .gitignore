@@ -1,0 +1,10 @@
+target/
+*.iml
+.idea/
+.vscode/
+.DS_Store
+.env
+*.log
+*.key
+*.pem
+.polyglot.version
