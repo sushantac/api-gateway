@@ -1,0 +1,8 @@
+logging:
+  level:
+    reactor.netty: WARN
+    com.ecommerce.apigateway: INFO
+
+management:
+  tracing:
+    enabled: false
